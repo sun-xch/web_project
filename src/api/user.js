@@ -15,6 +15,14 @@ export function getInfo() {
   })
 }
 
+export function getUserList(data) {
+  return request({
+    url: '/user/getUserList',
+    method: 'post',
+    data
+  })
+}
+
 export function logout() {
   return request({
     url: '/logout',

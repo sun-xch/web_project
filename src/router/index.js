@@ -170,6 +170,28 @@ export const constantRoutes = [
     ]
   },
 
+  {
+    path: '/system',
+    component: Layout,
+    redirect: '/system',
+    name: 'system',
+    meta: { title: '系统信息', icon: 'el-icon-s-help' },
+    children: [
+      {
+        path: 'sys-user',
+        name: 'sys-user',
+        component: () => import('@/views/system/sys-user'),
+        meta: { title: '用户管理', icon: 'table' }
+      },
+      {
+        path: 'sys-param',
+        name: 'sys-param',
+        component: () => import('@/views/system/sys-param'),
+        meta: { title: '参数管理', icon: 'table' }
+      }
+    ]
+  },
+
   // 404 page must be placed at the end !!!
   { path: '*', redirect: '/404', hidden: true }
 ]
