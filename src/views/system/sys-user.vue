@@ -1,5 +1,8 @@
 <template>
   <div class="app-container">
+    <el-row>
+      <el-button type="primary" size="small" @click="addSingleUser">新增用户</el-button>
+    </el-row>
     <el-table
       v-loading="listLoading"
       :data="list"
@@ -49,13 +52,13 @@
 </template>
 
 <script>
-import { getUserList } from '@/api/user'
+import { getUserList, addSingleUser } from '@/api/user'
 
 export default {
   filters: {
     statusFilter(status) {
       const statusMap = {
-        1: '可用',
+        1: '启用',
         0: '禁用'
       }
       return statusMap[status]
@@ -76,6 +79,11 @@ export default {
       getUserList({}).then(response => {
         this.list = response.data.items
         this.listLoading = false
+      })
+    },
+    addSingleUser(){
+      addSingleUser({}).then(response =>{
+        console.log(response)
       })
     }
   }

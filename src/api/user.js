@@ -8,6 +8,13 @@ export function login(data) {
   })
 }
 
+export function logout() {
+  return request({
+    url: '/logout',
+    method: 'post'
+  })
+}
+
 export function getInfo() {
   return request({
     url: '/user/info',
@@ -23,9 +30,11 @@ export function getUserList(data) {
   })
 }
 
-export function logout() {
+export function addSingleUser(data) {
   return request({
-    url: '/logout',
-    method: 'post'
+    url: '/user/addSingleUser',
+    method: 'post',
+    data
   })
 }
+
