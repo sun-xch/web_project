@@ -31,6 +31,17 @@ import Layout from '@/layout'
  */
 export const constantRoutes = [
   {
+    path: '/redirect',
+    component: Layout,
+    hidden: true,
+    children: [
+      {
+        path: '/redirect/:path*',
+        component: () => import('@/views/redirect/index')
+      }
+    ]
+  },
+  {
     path: '/login',
     component: () => import('@/views/login/index'),
     hidden: true
@@ -170,27 +181,36 @@ export const constantRoutes = [
     ]
   },
 
-  {
-    path: '/system',
-    component: Layout,
-    redirect: '/system',
-    name: 'system',
-    meta: { title: '系统信息', icon: 'el-icon-s-help' },
-    children: [
-      {
-        path: 'sys-user',
-        name: 'sys-user',
-        component: () => import('@/views/system/sys-user'),
-        meta: { title: '用户管理', icon: 'table' }
-      },
-      {
-        path: 'sys-param',
-        name: 'sys-param',
-        component: () => import('@/views/system/sys-param'),
-        meta: { title: '参数管理', icon: 'table' }
-      }
-    ]
-  },
+  // 404 page must be placed at the end !!!
+  //{ path: '*', redirect: '/404', hidden: true }
+]
+
+/**
+ * asyncRoutes
+ * 需要根据用户角色动态加载的路由
+ */
+export let asyncRoutes = [
+  // {
+  //   path: '/system',
+  //   component: Layout,
+  //   redirect: '/system',
+  //   name: 'system',
+  //   meta: { title: '系统信息', icon: 'el-icon-s-help' },
+  //   children: [
+  //     {
+  //       path: 'sys-user',
+  //       name: 'sys-user',
+  //       component: () => import('@/views/system/sys-user'),
+  //       meta: { title: '用户管理', icon: 'table' }
+  //     },
+  //     {
+  //       path: 'sys-param',
+  //       name: 'sys-param',
+  //       component: () => import('@/views/system/sys-param'),
+  //       meta: { title: '参数管理', icon: 'table' }
+  //     }
+  //   ]
+  // },
 
   // 404 page must be placed at the end !!!
   { path: '*', redirect: '/404', hidden: true }
@@ -207,6 +227,7 @@ const router = createRouter()
 // Detail see: https://github.com/vuejs/vue-router/issues/1234#issuecomment-357941465
 export function resetRouter() {
   const newRouter = createRouter()
+  asyncRoutes = [] // 修复重复登陆退出，左侧菜单不清空问题
   router.matcher = newRouter.matcher // reset router
 }
 

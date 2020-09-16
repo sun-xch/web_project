@@ -11,8 +11,7 @@
       fit
       highlight-current-row
     >
-      <el-table-column type="index">
-      </el-table-column>
+      <el-table-column type="index" />
       <el-table-column label="姓名">
         <template slot-scope="scope">
           {{ scope.row.name }}
@@ -36,15 +35,15 @@
       <el-table-column label="用户状态">
         <template slot-scope="scope">
           <el-switch
-            class="switchStyle"
             v-model="scope.row.enabled"
+            class="switchStyle"
             active-color="#13ce66"
             inactive-color="#ff4949"
             active-value="1"
             inactive-value="0"
             active-text="启用"
-            inactive-text="禁用">
-          </el-switch>
+            inactive-text="禁用"
+          />
         </template>
       </el-table-column>
     </el-table>
@@ -81,8 +80,8 @@ export default {
         this.listLoading = false
       })
     },
-    addSingleUser(){
-      addSingleUser({}).then(response =>{
+    addSingleUser() {
+      addSingleUser({}).then(response => {
         console.log(response)
       })
     }
