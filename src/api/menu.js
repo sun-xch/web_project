@@ -14,3 +14,11 @@ export function getMenu(data) {
     data
   })
 }
+
+export function saveMenu(data) {
+  return request({
+    url: '/menu/saveMenu',
+    method: 'post',
+    data
+  })
+}
