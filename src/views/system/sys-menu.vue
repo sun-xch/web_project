@@ -1,7 +1,6 @@
 <template>
   <div class="app-container">
     <el-tree
-      ref="treeList"
       :data="menuData"
       :props="props"
       node-key="uuid"
@@ -84,9 +83,9 @@ export default {
       const param = {}
       param.menuPid = data.uuid
       param.level = parseInt(data.level) + 1
-      if(data.uuid === '0'){
+      if (data.uuid === '0') {
         param.isLeaf = '0'
-      }else{
+      } else {
         param.isLeaf = '1'
       }
       this.pdata = param

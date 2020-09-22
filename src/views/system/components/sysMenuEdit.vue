@@ -95,9 +95,9 @@ export default {
       // 重新选择了父级菜单 所以要重置 父级菜单id 及 菜单级别
       this.menuForm.menuPid = item.uuid
       this.menuForm.level = parseInt(item.level) + 1
-      if(item.uuid === '0'){
+      if (item.uuid === '0') {
         this.menuForm.isLeaf = '0'
-      }else{
+      } else {
         this.menuForm.isLeaf = '1'
       }
     },
@@ -107,7 +107,7 @@ export default {
           // 默认都是菜单类型
           this.menuForm.type = '1'
           saveMenu(this.menuForm).then(response => {
-            if(response.code === 200){
+            if (response.code === 200) {
               this.$emit('hideDialog')
               this.$message({
                 message: '操作成功，请绑定角色',

@@ -22,3 +22,11 @@ export function saveMenu(data) {
     data
   })
 }
+
+export function getMenuAndBindRole(data) {
+  return request({
+    url: '/menu/getMenuAndBindRole',
+    method: 'post',
+    data
+  })
+}
