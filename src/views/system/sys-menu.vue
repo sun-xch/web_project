@@ -83,6 +83,12 @@ export default {
       // data.childMenu.push(newChild)
       const param = {}
       param.menuPid = data.uuid
+      param.level = parseInt(data.level) + 1
+      if(data.uuid === '0'){
+        param.isLeaf = '0'
+      }else{
+        param.isLeaf = '1'
+      }
       this.pdata = param
       this.dialog.title = '新增菜单'
       this.editSysMenuDialog = true
