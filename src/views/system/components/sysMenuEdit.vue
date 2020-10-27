@@ -21,6 +21,16 @@
           />
         </el-select>
       </el-form-item>
+      <el-form-item label="类型" prop="type">
+        <el-select v-model="menuForm.type" filterable clearable placeholder="请选择菜单类型" style="width: 100%;">
+          <el-option
+            v-for="item in typeList"
+            :key="item.id"
+            :label="item.label"
+            :value="item.id"
+          />
+        </el-select>
+      </el-form-item>
       <el-form-item label="图标" prop="icon">
         <el-input v-model.trim="menuForm.icon" />
       </el-form-item>
@@ -53,6 +63,18 @@ export default {
     return {
       menuForm: {},
       pidList: [],
+      typeList:[
+        {
+          id: '0',
+          label: '目录'
+        }, {
+          id: '1',
+          label: '菜单'
+        }, {
+          id: '2',
+          label: '按钮'
+        }
+      ],
       menuFormRules: {
         menuName: [
           { required: true, message: '请输入菜单名称', trigger: 'blur' },
@@ -67,7 +89,10 @@ export default {
           { min: 1, max: 100, message: '长度在 1 到 100 个字符', trigger: 'blur' }
         ],
         menuPid: [
-          { required: true, message: '请选择父级菜单', trigger: 'blur' }
+          { required: true, message: '请选择父级菜单', trigger: 'change' }
+        ],
+        type: [
+          { required: true, message: '请选择菜单类型', trigger: 'change' }
         ],
         icon: [
           { min: 1, max: 50, message: '长度在 1 到 50 个字符', trigger: 'blur' }
@@ -84,7 +109,7 @@ export default {
   },
   methods: {
     loadForm() {
-      this.menuForm = this.pdata
+      this.menuForm = Object.assign({}, this.pdata)
     },
     getMenu() {
       getMenu({}).then(response => {
@@ -95,11 +120,7 @@ export default {
       // 重新选择了父级菜单 所以要重置 父级菜单id 及 菜单级别
       this.menuForm.menuPid = item.uuid
       this.menuForm.level = parseInt(item.level) + 1
-      if (item.uuid === '0') {
-        this.menuForm.isLeaf = '0'
-      } else {
-        this.menuForm.isLeaf = '1'
-      }
+      this.menuForm.isLeaf = '1'
     },
     onSubmit(formName) {
       this.$refs[formName].validate((valid) => {

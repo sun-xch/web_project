@@ -22,12 +22,12 @@ const mutations = {
 export function generaMenu(routes, data) {
   data.forEach(item => {
     let menu = {}
-    // 默认隐藏
-    let hiddenFalg = true
+    // 默认显示
+    let hiddenFalg = false
     // 如果是1，不需要隐藏
-    if (item.type === '1') {
-      hiddenFalg = false
-    }
+    // if (item.type === '1') {
+    //   hiddenFalg = false
+    // }
     if (item.url.indexOf(':') > -1) {
       // url中带：号的这种，是编辑，path和component不一样
       const componentUrl = item.url.substring(0, item.url.lastIndexOf('/'))

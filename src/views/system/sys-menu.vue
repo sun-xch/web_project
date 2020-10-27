@@ -1,40 +1,60 @@
 <template>
   <div class="app-container">
-    <el-tree
-      :data="menuData"
-      :props="props"
-      node-key="uuid"
+    
+    <el-row type="flex" justify="end">
+      <el-button type="primary" size="small" icon="el-icon-plus" @click="append()">新增菜单</el-button>
+    </el-row>
+    <el-table
+      :data="tableData"
+      row-key="uuid"
+      border
       default-expand-all
-      :expand-on-click-node="false"
-      :highlight-current="true"
-    >
-      <span slot-scope="{ node, data }" class="custom-tree-node">
-        <span>{{ node.label }}</span>
-        <span>
-          <el-button
-            type="text"
-            size="mini"
-            @click="() => edit(data)"
-          >
-            Edit
-          </el-button>
-          <el-button
-            type="text"
-            size="mini"
-            @click="() => append(data)"
-          >
-            Append
-          </el-button>
-          <el-button
-            type="text"
-            size="mini"
-            @click="() => remove(node, data)"
-          >
-            Delete
-          </el-button>
-        </span>
-      </span>
-    </el-tree>
+      :tree-props="{children: 'childMenu'}">
+      <el-table-column
+        prop="menuName"
+        label="名称">
+      </el-table-column>
+      <el-table-column
+        prop="icon"
+        label="图标">
+        <template slot-scope="scope">
+          <i :class="scope.row.icon || ''"></i>
+        </template>
+      </el-table-column>
+      <el-table-column
+        prop="type"
+        label="类型">
+        <template slot-scope="scope">
+          <el-tag v-if="scope.row.type === '0'"
+                  size="small">目录</el-tag>
+          <el-tag v-else-if="scope.row.type === '1'"
+                  size="small"
+                  type="success">菜单</el-tag>
+          <el-tag v-else-if="scope.row.type === '2'"
+                  size="small"
+                  type="info">按钮</el-tag>
+        </template>
+      </el-table-column>
+      <el-table-column
+        prop="sort"
+        label="排序号">
+      </el-table-column>
+      <el-table-column
+        prop="url"
+        label="路径">
+      </el-table-column>
+      <el-table-column
+        label="操作">
+        <template slot-scope="scope">
+          <el-button type="text"
+                     size="small"
+                     @click="edit(scope.row)">修改</el-button>
+          <el-button type="text"
+                     size="small"
+                     @click="remove(scope.row)">删除</el-button>
+        </template>
+      </el-table-column>
+    </el-table>
     <!-- 编辑菜单 -->
     <el-dialog :visible.sync="editSysMenuDialog" :title="dialog.title" :close-on-click-modal="false">
       <sysMenuEdit v-if="editSysMenuDialog" :pdata="pdata" @hideDialog="hideDialog" />
@@ -51,11 +71,7 @@ export default {
   },
   data() {
     return {
-      props: {
-        label: 'menuName',
-        children: 'childMenu'
-      },
-      menuData: [],
+      tableData: [],
       dialog: {
         title: ''
       },
@@ -69,7 +85,7 @@ export default {
   methods: {
     getAuthMenu() {
       getAuthMenu().then(response => {
-        this.menuData = JSON.parse(JSON.stringify(response.data.items))
+        this.tableData = JSON.parse(JSON.stringify(response.data.items))
       })
     },
     edit(data) {
@@ -77,18 +93,8 @@ export default {
       this.dialog.title = '编辑菜单'
       this.editSysMenuDialog = true
     },
-    append(data) {
-      // const newChild = { menuPid: data.uuid, menuName: '', childMenu: [] }
-      // data.childMenu.push(newChild)
-      const param = {}
-      param.menuPid = data.uuid
-      param.level = parseInt(data.level) + 1
-      if (data.uuid === '0') {
-        param.isLeaf = '0'
-      } else {
-        param.isLeaf = '1'
-      }
-      this.pdata = param
+    append() {
+      this.pdata = {}
       this.dialog.title = '新增菜单'
       this.editSysMenuDialog = true
     },
@@ -104,12 +110,3 @@ export default {
   }
 }
 </script>
-<style>
-  .custom-tree-node {
-    flex: 1;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding-right: 8px;
-  }
-</style>

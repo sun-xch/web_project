@@ -1,6 +1,6 @@
 <template>
   <div class="app-container">
-    <el-row>
+    <el-row type="flex" justify="end">
       <el-button type="primary" size="small" @click="addSingleUser">新增用户</el-button>
     </el-row>
     <el-table
