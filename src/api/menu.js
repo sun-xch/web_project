@@ -7,9 +7,16 @@ export function getAuthMenu() {
   })
 }
 
-export function getMenu(data) {
+export function getAuthAllMenu() {
   return request({
-    url: '/menu/getMenu',
+    url: '/menu/getAuthAllMenu',
+    method: 'get'
+  })
+}
+
+export function getAllMenu(data) {
+  return request({
+    url: '/menu/getAllMenu',
     method: 'post',
     data
   })

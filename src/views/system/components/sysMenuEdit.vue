@@ -49,7 +49,7 @@
 </template>
 
 <script>
-import { getMenu, saveMenu } from '@/api/menu'
+import { getAllMenu, saveMenu } from '@/api/menu'
 export default {
   props: {
     // 获取父页面的参数
@@ -104,16 +104,16 @@ export default {
     }
   },
   mounted: function() {
-    this.getMenu()
+    this.getAllMenu()
     this.loadForm()
   },
   methods: {
     loadForm() {
       this.menuForm = Object.assign({}, this.pdata)
     },
-    getMenu() {
-      getMenu({}).then(response => {
-        this.pidList = response.data.items
+    getAllMenu() {
+      getAllMenu({}).then(response => {
+        this.pidList = JSON.parse(JSON.stringify(response.data.items))
       })
     },
     resetParentMenu(item) {
@@ -145,3 +145,11 @@ export default {
   }
 }
 </script>
+<style>
+.el-radio {
+  color: #606266;
+  cursor: pointer;
+  visibility: hidden;
+  margin-right: 10px;
+}
+</style>
