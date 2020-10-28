@@ -1,6 +1,6 @@
 <template>
   <div class="app-container">
-    
+
     <el-row type="flex" justify="end">
       <el-button type="primary" size="small" icon="el-icon-plus" @click="append()">新增菜单</el-button>
     </el-row>
@@ -9,49 +9,63 @@
       row-key="uuid"
       border
       default-expand-all
-      :tree-props="{children: 'childMenu'}">
+      :tree-props="{children: 'childMenu'}"
+    >
       <el-table-column
         prop="menuName"
-        label="名称">
-      </el-table-column>
+        label="名称"
+      />
       <el-table-column
         prop="icon"
-        label="图标">
+        label="图标"
+      >
         <template slot-scope="scope">
-          <i :class="scope.row.icon || ''"></i>
+          <i :class="scope.row.icon || ''" />
         </template>
       </el-table-column>
       <el-table-column
         prop="type"
-        label="类型">
+        label="类型"
+      >
         <template slot-scope="scope">
-          <el-tag v-if="scope.row.type === '0'"
-                  size="small">目录</el-tag>
-          <el-tag v-else-if="scope.row.type === '1'"
-                  size="small"
-                  type="success">菜单</el-tag>
-          <el-tag v-else-if="scope.row.type === '2'"
-                  size="small"
-                  type="info">按钮</el-tag>
+          <el-tag
+            v-if="scope.row.type === '0'"
+            size="small"
+          >目录</el-tag>
+          <el-tag
+            v-else-if="scope.row.type === '1'"
+            size="small"
+            type="success"
+          >菜单</el-tag>
+          <el-tag
+            v-else-if="scope.row.type === '2'"
+            size="small"
+            type="info"
+          >按钮</el-tag>
         </template>
       </el-table-column>
       <el-table-column
         prop="sort"
-        label="排序号">
-      </el-table-column>
+        label="排序号"
+      />
       <el-table-column
         prop="url"
-        label="路径">
-      </el-table-column>
+        label="路径"
+      />
       <el-table-column
-        label="操作">
+        label="操作"
+      >
         <template slot-scope="scope">
-          <el-button type="text"
-                     size="small"
-                     @click="edit(scope.row)">修改</el-button>
-          <el-button type="text"
-                     size="small"
-                     @click="remove(scope.row)">删除</el-button>
+          <el-button
+            type="text"
+            size="small"
+            @click="edit(scope.row)"
+          >修改</el-button>
+          <el-button
+            type="text"
+            size="small"
+            @click="remove(scope.row)"
+          >删除</el-button>
         </template>
       </el-table-column>
     </el-table>

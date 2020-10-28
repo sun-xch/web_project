@@ -11,18 +11,23 @@
         <el-input v-model.trim="menuForm.url" />
       </el-form-item>
       <el-form-item label="父级菜单" prop="menuPid">
-        <el-select v-model="menuForm.menuPid" filterable clearable placeholder="请选择父级菜单" style="width: 100%;">
-          <el-option
-            v-for="item in pidList"
-            :key="item.uuid"
-            :label="item.menuName"
-            :value="item.uuid"
-            @click.native="resetParentMenu(item)"
-          />
+        <el-select v-model="menuForm.menuPid" ref="selectMenu" placeholder="请选择父级菜单" style="width: 100%;">
+          <el-option :value="menuForm.menuPid" :label="parentMenuName" style="height:200px;overflow: auto;background-color:#fff">
+            <el-tree
+              ref="menuTree"
+              node-key="uuid"
+              :data="pidList"
+              :props="defaultProps"
+              :expand-on-click-node="false"
+              :highlight-current="true"
+              :default-expanded-keys="defaultExpandedKeys"
+              @node-click="handleNodeClick"
+            />
+          </el-option>
         </el-select>
       </el-form-item>
       <el-form-item label="类型" prop="type">
-        <el-select v-model="menuForm.type" filterable clearable placeholder="请选择菜单类型" style="width: 100%;">
+        <el-select v-model="menuForm.type" filterable placeholder="请选择菜单类型" style="width: 100%;">
           <el-option
             v-for="item in typeList"
             :key="item.id"
@@ -49,7 +54,7 @@
 </template>
 
 <script>
-import { getAllMenu, saveMenu } from '@/api/menu'
+import { getAuthAllMenu, saveMenu } from '@/api/menu'
 export default {
   props: {
     // 获取父页面的参数
@@ -62,8 +67,14 @@ export default {
   data() {
     return {
       menuForm: {},
+      parentMenuName: '',
+      defaultProps: {
+        label: 'menuName',
+        children: 'childMenu'
+      },
+      defaultExpandedKeys: [],
       pidList: [],
-      typeList:[
+      typeList: [
         {
           id: '0',
           label: '目录'
@@ -89,7 +100,7 @@ export default {
           { min: 1, max: 100, message: '长度在 1 到 100 个字符', trigger: 'blur' }
         ],
         menuPid: [
-          { required: true, message: '请选择父级菜单', trigger: 'change' }
+          { required: true, message: '请选择父级菜单', trigger: ['blur', 'change'] }
         ],
         type: [
           { required: true, message: '请选择菜单类型', trigger: 'change' }
@@ -104,29 +115,39 @@ export default {
     }
   },
   mounted: function() {
-    this.getAllMenu()
+    this.getAuthAllMenu()
     this.loadForm()
   },
   methods: {
     loadForm() {
       this.menuForm = Object.assign({}, this.pdata)
+      // 设置父级菜单下拉选选中项默认展开
+      this.defaultExpandedKeys.push(this.menuForm.menuPid)
     },
-    getAllMenu() {
-      getAllMenu({}).then(response => {
+    getAuthAllMenu() {
+      getAuthAllMenu().then(response => {
         this.pidList = JSON.parse(JSON.stringify(response.data.items))
+        // 设置父级菜单默认选中
+        if (this.menuForm.menuPid) {
+          this.$nextTick(() => {
+            this.$refs.menuTree.setCurrentKey(this.menuForm.menuPid)// 获取已经设置的资源后渲染
+            const obj = this.$refs.menuTree.getCurrentNode()
+            this.parentMenuName = obj.menuName
+          })
+        }
       })
     },
-    resetParentMenu(item) {
+    handleNodeClick: function(node) {
       // 重新选择了父级菜单 所以要重置 父级菜单id 及 菜单级别
-      this.menuForm.menuPid = item.uuid
-      this.menuForm.level = parseInt(item.level) + 1
+      this.parentMenuName = node.menuName
+      this.menuForm.menuPid = node.uuid
+      this.menuForm.level = parseInt(node.level) + 1
       this.menuForm.isLeaf = '1'
+      this.$refs.selectMenu.blur()
     },
     onSubmit(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          // 默认都是菜单类型
-          this.menuForm.type = '1'
           saveMenu(this.menuForm).then(response => {
             if (response.code === 200) {
               this.$emit('hideDialog')
@@ -145,11 +166,3 @@ export default {
   }
 }
 </script>
-<style>
-.el-radio {
-  color: #606266;
-  cursor: pointer;
-  visibility: hidden;
-  margin-right: 10px;
-}
-</style>
