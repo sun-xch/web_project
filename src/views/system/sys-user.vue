@@ -1,8 +1,8 @@
 <template>
   <div class="app-container">
-    <el-row type="flex" justify="end">
+    <!-- <el-row type="flex" justify="end">
       <el-button type="primary" size="small" @click="addSingleUser">新增用户</el-button>
-    </el-row>
+    </el-row> -->
     <el-table
       v-loading="listLoading"
       :data="list"
@@ -43,6 +43,7 @@
             inactive-value="0"
             active-text="启用"
             inactive-text="禁用"
+            @change="enabledChange($event, scope.row)"
           />
         </template>
       </el-table-column>
@@ -51,7 +52,7 @@
 </template>
 
 <script>
-import { getUserList, addSingleUser } from '@/api/user'
+import { getUserList, addSingleUser,updateUser } from '@/api/user'
 
 export default {
   filters: {
@@ -78,6 +79,26 @@ export default {
       getUserList({}).then(response => {
         this.list = response.data.items
         this.listLoading = false
+      })
+    },
+    enabledChange(callback, row){
+      this.$confirm('此操作将切换用户使用状态, 是否继续?', '提示', {
+        confirmButtonText: '是',
+        cancelButtonText: '否',
+        type: 'warning'
+      }).then(() => {
+        updateUser(row).then(response => {
+          this.$message({
+            type: 'success',
+            message: '操作成功!'
+          })
+        })  
+      }).catch(() => {
+        if(callback == "1"){
+          row.enabled = "0"
+        }else{
+          row.enabled = "1"
+        }
       })
     },
     addSingleUser() {
