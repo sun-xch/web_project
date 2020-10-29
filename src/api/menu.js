@@ -14,14 +14,6 @@ export function getAuthAllMenu() {
   })
 }
 
-export function getAllMenu(data) {
-  return request({
-    url: '/menu/getAllMenu',
-    method: 'post',
-    data
-  })
-}
-
 export function saveMenu(data) {
   return request({
     url: '/menu/saveMenu',

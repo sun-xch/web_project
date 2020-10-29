@@ -11,8 +11,8 @@
         <el-input v-model.trim="menuForm.url" />
       </el-form-item>
       <el-form-item label="父级菜单" prop="menuPid">
-        <el-select v-model="menuForm.menuPid" ref="selectMenu" placeholder="请选择父级菜单" style="width: 100%;">
-          <el-option :value="menuForm.menuPid" :label="parentMenuName" style="height:200px;overflow: auto;background-color:#fff">
+        <el-select ref="selectMenu" v-model="menuForm.menuPid" placeholder="请选择父级菜单" style="width: 100%;">
+          <el-option :value="menuForm.menuPid" :label="parentMenuName" style="height:200px;overflow: auto;font-weight: normal;background-color:#fff">
             <el-tree
               ref="menuTree"
               node-key="uuid"
@@ -100,7 +100,7 @@ export default {
           { min: 1, max: 100, message: '长度在 1 到 100 个字符', trigger: 'blur' }
         ],
         menuPid: [
-          { required: true, message: '请选择父级菜单', trigger: ['blur', 'change'] }
+          { required: true, message: '请选择父级菜单', trigger: 'blur' }
         ],
         type: [
           { required: true, message: '请选择菜单类型', trigger: 'change' }
@@ -133,6 +133,15 @@ export default {
             this.$refs.menuTree.setCurrentKey(this.menuForm.menuPid)// 获取已经设置的资源后渲染
             const obj = this.$refs.menuTree.getCurrentNode()
             this.parentMenuName = obj.menuName
+          })
+        } else {
+          this.$nextTick(() => {
+            this.$refs.menuTree.setCurrentKey('0')// 获取已经设置的资源后渲染
+            const obj = this.$refs.menuTree.getCurrentNode()
+            this.parentMenuName = obj.menuName
+            this.menuForm.menuPid = '0'
+            this.menuForm.level = parseInt(obj.level) + 1
+            this.menuForm.isLeaf = '1'
           })
         }
       })

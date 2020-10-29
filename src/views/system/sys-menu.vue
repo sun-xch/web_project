@@ -5,6 +5,7 @@
       <el-button type="primary" size="small" icon="el-icon-plus" @click="append()">新增菜单</el-button>
     </el-row>
     <el-table
+      v-loading="listLoading"
       :data="tableData"
       row-key="uuid"
       border
@@ -86,6 +87,7 @@ export default {
   data() {
     return {
       tableData: [],
+      listLoading: true,
       dialog: {
         title: ''
       },
@@ -98,8 +100,10 @@ export default {
   },
   methods: {
     getAuthMenu() {
+      this.listLoading = true
       getAuthMenu().then(response => {
         this.tableData = JSON.parse(JSON.stringify(response.data.items))
+        this.listLoading = false
       })
     },
     edit(data) {

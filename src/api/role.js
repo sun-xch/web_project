@@ -7,3 +7,19 @@ export function getRoleList(data) {
     data
   })
 }
+
+export function saveRole(data) {
+  return request({
+    url: '/role/saveRole',
+    method: 'post',
+    data
+  })
+}
+
+export function deleteRole(data) {
+  return request({
+    url: '/role/deleteRole',
+    method: 'post',
+    data
+  })
+}
